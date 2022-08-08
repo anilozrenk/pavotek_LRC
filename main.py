@@ -47,7 +47,7 @@ class Capacitor:
             self.induc_table.append(abs(self.impedance[i] / (2 * math.pi * self.frequency[i] ) )) 
         induc_slope = [0]
         for i in range(1,len(self.cap_table)):
-            ind_slope.append( np.log(self.induc_table[i]) - np.log(self.induc_table[i-1]) / (np.log(self.frequency[i]) - np.log(self.frequency[i-1])) )
+            induc_slope.append( np.log(self.induc_table[i]) - np.log(self.induc_table[i-1]) / (np.log(self.frequency[i]) - np.log(self.frequency[i-1])) )
         induc_slope[0]=induc_slope[1]
         pass 
 
