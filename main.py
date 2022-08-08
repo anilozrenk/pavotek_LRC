@@ -33,11 +33,19 @@ class Capacitor:
     def capasitance(self):
         for i in range(len(self.frequency)):
             self.cap_table.append(abs(1/ (2 * math.pi * self.frequency[i] * self.impedance[i] ) )) 
+        cap_slope = [0]
+        for i in range(1,len(self.cap_table)):
+            cap_slope.append( np.log(self.cap_table[i]) - np.log(self.cap_table[i-1]) / (np.log(self.frequency[i]) - np.log(self.frequency[i-1])) )
+        cap_slope[0]=cap_slope[1]
+        
+            
+        print(cap_slope) 
         pass 
     
     def inductance(self):
         for i in range(len(self.frequency)):
             self.induc_table.append(abs(self.impedance[i] / (2 * math.pi * self.frequency[i] ) )) 
+        
         pass 
 
     def resistance(self):
@@ -55,9 +63,7 @@ def main():
     frequency=list(df["Frequency[Hz]"])
     impedance=list(df['Impedance[ohm]'])    
     capacitor=Capacitor(frequency,impedance)
-    print(capacitor.cap_table)
-    print(capacitor.resistance)
-
+    
 
 
     root= Tk()
