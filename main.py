@@ -1,6 +1,8 @@
 
 import math
+from re import M
 from tkinter import *
+from unicodedata import name
 import numpy as np
 import pandas as pd
 
@@ -61,6 +63,14 @@ class Window:
     def __init__(self,root):
         self.root=root
         self.root.title("Pavotek LCR")
+        self.root.geometry("800x600")
+        self.root.resizable(False,False)
+        self.root.configure(background='#f0f0f0')
+        self.root.iconbitmap('icon.ico')
+        
+        
+      
+        
 
 def main():
     df=pd.read_csv('CAP.csv')   
@@ -69,7 +79,7 @@ def main():
     capacitor=Capacitor(frequency,impedance)
     
 
-
+    
     root= Tk()
     gui=Window(root)
     myLabel= Label(root,text="lololo",padx=100)
@@ -78,10 +88,34 @@ def main():
     myButton=Button(root,text="click")
     myButton.pack()
 
-    entry=Entry(root,width=50,border=5)
+    entry=Entry(root,width=50,border=5,cursor='man')
     entry.pack()
     entry.insert(0,"lololo")
-    #root.mainloop()
+   
+    
+    canvas=Canvas(root,width=150,height=150,background="#ffffff")
+    canvas.pack()
+    canvas.create_oval(10,10,140,110,fill="#afafaf")
+    
+    listbox=Listbox(root,width=10,height=3,selectmode=SINGLE,)
+    listbox.pack()
+    listbox.insert(END,"lololo1")
+    listbox.insert(END,"lololo2")
+    listbox.insert(END,"lololo3")
+    
+    optmenu=OptionMenu(root,'lele',"lololo1","lololo2","lololo3")
+    optmenu.pack()
+    
+    text=Text(root,width=50,height=2)
+    text.pack()
+    text.insert(END,"lololo")
+    
+    
+    
+    
+
+    root.mainloop()
+    
 
 
 
