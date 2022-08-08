@@ -1,4 +1,4 @@
-from array import array
+
 import math
 from tkinter import *
 import numpy as np
@@ -27,19 +27,18 @@ class Capacitor:
         self.resistance()
 
     def f_resonance(self):
-        self.index_resonance = self.impedance.index(min(self.impedance))                                           #np.where(self.impedance==self.impedance.min())
+        self.index_resonance = self.impedance.index(min(self.impedance))                                          
         self.resonance_frequency=self.frequency[self.index_resonance]
         pass
     def capasitance(self):
         for i in range(len(self.frequency)):
-            self.cap_table.append(abs(1/ (2 * math.pi * self.frequency[i] * self.impedance[i] ) )) 
+            self.cap_table.append(abs(1/ (2 * math.pi *complex(0,1)* self.frequency[i] * self.impedance[i] ) )) 
         cap_slope = [0]
         for i in range(1,len(self.cap_table)):
-            cap_slope.append( np.log(self.cap_table[i]) - np.log(self.cap_table[i-1]) / (np.log(self.frequency[i]) - np.log(self.frequency[i-1])) )
+            cap_slope.append( (np.log(self.cap_table[i]) - np.log(self.cap_table[i-1]) )/( (np.log(self.frequency[i]) - np.log(self.frequency[i-1])) ))
         cap_slope[0]=cap_slope[1]
-
-            
-        print(cap_slope) 
+        index_slope = list(map(abs,cap_slope)).index(min(map(abs,cap_slope)),0,self.index_resonance)
+        self.Cap=self.cap_table[index_slope]    
         pass 
     
     def inductance(self):
@@ -47,8 +46,10 @@ class Capacitor:
             self.induc_table.append(abs(self.impedance[i] / (2 * math.pi * self.frequency[i] ) )) 
         induc_slope = [0]
         for i in range(1,len(self.cap_table)):
-            induc_slope.append( np.log(self.induc_table[i]) - np.log(self.induc_table[i-1]) / (np.log(self.frequency[i]) - np.log(self.frequency[i-1])) )
+            induc_slope.append( (np.log(self.induc_table[i]) - np.log(self.induc_table[i-1])) / ((np.log(self.frequency[i]) - np.log(self.frequency[i-1]))))
         induc_slope[0]=induc_slope[1]
+        index_slope = list(map(abs,induc_slope)).index(min(list(map(abs,induc_slope))),self.index_resonance,len(induc_slope))
+        self.Ind=self.induc_table[index_slope]
         pass 
 
     def resistance(self):
