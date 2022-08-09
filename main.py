@@ -6,7 +6,6 @@ from tkinter.ttk import Combobox
 import numpy as np
 import pandas as pd
 
-
 #TODO
 # Decite use frequuency response for find capasitance or inductance
 # Correct Cm Choke
@@ -55,7 +54,7 @@ class Capacitor:
         index_slope = list(map(abs,induc_slope)).index(min(list(map(abs,induc_slope))),self.index_resonance,len(induc_slope))
         self.Ind=self.induc_table[index_slope]
 
-       # self.Ind=1/(4*(math.pi**2)*(self.resonance_frequency**2)*self.Cap)
+        self.Ind=1/(4*(math.pi**2)*(self.resonance_frequency**2)*self.Cap)
 
         pass 
 
@@ -208,7 +207,7 @@ class Application:
 
         self.runbutton = Button (self.root,text="Run",command=self.routine)
         self.runbutton.pack()
-
+        self.solution=Label(self.root,text="",bg="#f0f0f0",pady=10)
     def choiceFreqResponseData(self):
         self.filename = filedialog.askopenfilename(
                                     initialdir = "./",
