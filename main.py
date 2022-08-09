@@ -1,14 +1,14 @@
 
 import math
-from re import M
 from tkinter import *
-from unicodedata import name
+from tkinter import filedialog
+from tkinter import messagebox
+from tkinter.ttk import Combobox
 import numpy as np
 import pandas as pd
 
 
-def slope():
-    return
+
 
 
 class Capacitor:
@@ -28,6 +28,7 @@ class Capacitor:
         self.inductance()
         self.resistance()
 
+        
     def f_resonance(self):
         self.index_resonance = self.impedance.index(min(self.impedance))                                          
         self.resonance_frequency=self.frequency[self.index_resonance]
@@ -58,61 +59,94 @@ class Capacitor:
         self.resistance=min(self.impedance)
         pass
     
-class Window:
+class Application:
     
     def __init__(self,root):
         self.root=root
         self.root.title("Pavotek LCR")
         self.root.geometry("800x600")
-        self.root.resizable(False,False)
+        #self.root.resizable(False,False)
         self.root.configure(background='#f0f0f0')
-        self.root.iconbitmap('icon.ico')
+        #self.root.iconbitmap('icon.ico')
+        self.choicetext = Entry (self.root,width=30)
+        self.choicetext.insert(0,"./data/data.csv")
+        self.choicetext.pack()
+
+        self.choicebutton = Button (self.root,text="Choose file",command=self.choiceFreqResponseData)
+        self.choicebutton.pack()
+
+        self.db_or_z=IntVar()
+        self.dbradio = Radiobutton(self.root,text="dB formatted data",variable=self.db_or_z,value=0).pack()
+        self.zradio = Radiobutton(self.root,text="Z formatted data",variable=self.db_or_z,value=1).pack()
+
+        self.component=Combobox(self.root,values=["Capacitor","Inductor","CM Choke"])
+        self.component.pack()
+
+        self.runbutton = Button (self.root,text="Run",command=self.routine)
+        self.runbutton.pack()
+
+    def choiceFreqResponseData(self):
+        self.filename = filedialog.askopenfilename(
+                                    initialdir = "./",
+                                    title = "Select file",
+                                    filetypes = (("csv files","*.csv"),("txt files","*.txt"),("all files","*.*")))
+        self.choicetext.delete(0,END)
+        self.choicetext.insert(0,self.filename)
         
-        
-      
-        
+        pass
+
+    def choiceComponent(self):
+        pass
+
+        ##TODO
+        ##Protect against emty file
+        ##Protect against wrong file type
+        ##dB to Z conversion
+        ##
+        ##Plotting
+        ##Save to file
+    def routine(self):
+        comp=self.component.get()
+
+        df=pd.read_csv(self.filename)   
+
+        self.frequency=list(df.iloc[:,0])
+        self.impedance=list(df.iloc[:,1])  
+
+        #self.frequency=list(df["Frequency[Hz]"])
+        #self.impedance=list(df['Impedance[ohm]'])  
+
+
+        if comp=="Capacitor":
+            self.capacitor=Capacitor(self.frequency,self.impedance)
+            self.solution=Label(self.root,text="Capacitance: "+str(self.capacitor.Cap)+
+                    "\nInductance: "+str(self.capacitor.Ind)+
+                    "\nSerial Resistance: "+str(self.capacitor.resistance) +
+                    "\nResonance frequency: "+str(self.capacitor.resonance_frequency))                    
+            self.solution.pack()
+            pass
+
+        elif comp=="Inductor":
+            pass
+        elif comp=="CM Choke":
+            pass
+
+        pass
+
+
+    
 
 def main():
-    df=pd.read_csv('CAP.csv')   
-    frequency=list(df["Frequency[Hz]"])
-    impedance=list(df['Impedance[ohm]'])    
-    capacitor=Capacitor(frequency,impedance)
-    
+         
+
+    root = Tk()
+    app = Application(root)
+
 
     
-    root= Tk()
-    gui=Window(root)
-    myLabel= Label(root,text="lololo",padx=100)
-    myLabel.pack()
-
-    myButton=Button(root,text="click")
-    myButton.pack()
-
-    entry=Entry(root,width=50,border=5,cursor='man')
-    entry.pack()
-    entry.insert(0,"lololo")
    
     
-    canvas=Canvas(root,width=150,height=150,background="#ffffff")
-    canvas.pack()
-    canvas.create_oval(10,10,140,110,fill="#afafaf")
-    
-    listbox=Listbox(root,width=10,height=3,selectmode=SINGLE,)
-    listbox.pack()
-    listbox.insert(END,"lololo1")
-    listbox.insert(END,"lololo2")
-    listbox.insert(END,"lololo3")
-    
-    optmenu=OptionMenu(root,'lele',"lololo1","lololo2","lololo3")
-    optmenu.pack()
-    
-    text=Text(root,width=50,height=2)
-    text.pack()
-    text.insert(END,"lololo")
-    
-    
-    
-    
+    #chart = FigureCanvasTkAgg(figure, root)
 
     root.mainloop()
     
