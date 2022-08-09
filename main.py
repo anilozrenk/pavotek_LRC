@@ -102,7 +102,7 @@ class Application:
         ##Protect against emty file
         ##Protect against wrong file type
         ##dB to Z conversion
-        ##
+        ##dot to coma conversion
         ##Plotting
         ##Save to file
     def routine(self):
@@ -112,6 +112,16 @@ class Application:
 
         self.frequency=list(df.iloc[:,0])
         self.impedance=list(df.iloc[:,1])  
+
+        if self.db_or_z.get()==0:
+            self.impedance=list(map(lambda x: 10**(x/20),self.impedance))
+            pass
+        elif self.db_or_z.get()==1:
+            pass
+        else:
+            messagebox.showerror("Error","Choose if data is in dB or Z format")
+            pass
+        
 
         #self.frequency=list(df["Frequency[Hz]"])
         #self.impedance=list(df['Impedance[ohm]'])  
