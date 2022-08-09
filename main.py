@@ -162,7 +162,8 @@ class CmChoke:
     def resistance(self):
         self.resistance=max(self.impedance)
         pass
-
+        self.resistance=self.resistance*2
+        self.Cap=self.Cap/2
 class Application:
     
     def __init__(self,root):
