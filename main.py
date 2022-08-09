@@ -169,7 +169,7 @@ class Application:
     def __init__(self,root):
         self.root=root
         self.root.title("Pavotek LCR")
-        #self.root.geometry("800x600")
+        self.root.geometry("500x800")
         #self.root.resizable(False,False)
         self.root.configure(background='#f0f0f0')
         #self.root.iconbitmap('icon.ico')
@@ -189,20 +189,21 @@ class Application:
         self.csvradio = Radiobutton(self.root,text="CSV",variable=self.csv_or_table,value=0,bg="#f0f0f0").pack()
         self.tableradio = Radiobutton(self.root,text="Table",variable=self.csv_or_table,value=1,bg="#f0f0f0").pack()
 
-        Label(self.root,text="Is decima seperator comma or dot",bg="#f0f0f0",pady=10).pack()
+        Label(self.root,text="Is decimal seperator comma or dot",bg="#f0f0f0",pady=10).pack()
         self.decimalsep_comma_or_dot = IntVar()
         self.commaradio = Radiobutton (self.root,text="Decimal Comma",
                                         variable=self.decimalsep_comma_or_dot,value=0,bg="#f0f0f0").pack()
         self.dotradio   = Radiobutton (self.root,text="Decimal Dot",
                                         variable=self.decimalsep_comma_or_dot,value=1,bg="#f0f0f0").pack()
         
+        Label(self.root,text="Impedance data type dB or Z(ohm)?",bg="#f0f0f0",pady=10).pack()
         self.db_or_z=IntVar()
         self.dbradio = Radiobutton(self.root,text="dB formatted data",
                                     variable=self.db_or_z,value=0,bg="#f0f0f0").pack()
         self.zradio = Radiobutton(self.root,text="Z formatted data",
                                     variable=self.db_or_z,value=1,bg="#f0f0f0").pack()
 
-        self.component=Combobox(self.root,values=["Capacitor","Inductor","CM Choke"])
+        self.component=Combobox(self.root,values=["Capacitor","Inductor","CM Choke"],height=5,width=20,state="readonly")
         self.component.pack()
 
         self.runbutton = Button (self.root,text="Run",command=self.routine)
