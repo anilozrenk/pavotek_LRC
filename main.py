@@ -1,5 +1,3 @@
-
-import difflib
 import math
 from tkinter import *
 from tkinter import filedialog
@@ -10,7 +8,8 @@ import pandas as pd
 
 
 #TODO
-# Decite use frequuency response for find capasitance or inductance 
+# Decite use frequuency response for find capasitance or inductance
+# Correct Cm Choke
 
 
 class Capacitor:
@@ -170,10 +169,14 @@ class Application:
     def __init__(self,root):
         self.root=root
         self.root.title("Pavotek LCR")
-        self.root.geometry("800x600")
+        #self.root.geometry("800x600")
         #self.root.resizable(False,False)
         self.root.configure(background='#f0f0f0')
         #self.root.iconbitmap('icon.ico')
+
+        Label(self.root,text="Pavotek LCR",font=("Helvetica",20),bg="#f0f0f0",fg="#000000",pady=50).pack()
+        
+        Label(self.root,text="Enter the file destination",bg="#f0f0f0",pady=10).pack()
         self.choicetext = Entry (self.root,width=30)
         self.choicetext.insert(0,"./data/data.csv")
         self.choicetext.pack()
@@ -181,21 +184,23 @@ class Application:
         self.choicebutton = Button (self.root,text="Choose file",command=self.choiceFreqResponseData)
         self.choicebutton.pack()
 
+        Label(self.root,text="Is it csv format or table format",bg="#f0f0f0",pady=10).pack()
         self.csv_or_table = IntVar()
-        self.csvradio = Radiobutton(self.root,text="CSV",variable=self.csv_or_table,value=0).pack()
-        self.tableradio = Radiobutton(self.root,text="Table",variable=self.csv_or_table,value=1).pack()
+        self.csvradio = Radiobutton(self.root,text="CSV",variable=self.csv_or_table,value=0,bg="#f0f0f0").pack()
+        self.tableradio = Radiobutton(self.root,text="Table",variable=self.csv_or_table,value=1,bg="#f0f0f0").pack()
 
+        Label(self.root,text="Is decima seperator comma or dot",bg="#f0f0f0",pady=10).pack()
         self.decimalsep_comma_or_dot = IntVar()
         self.commaradio = Radiobutton (self.root,text="Decimal Comma",
-                                        variable=self.decimalsep_comma_or_dot,value=0).pack()
+                                        variable=self.decimalsep_comma_or_dot,value=0,bg="#f0f0f0").pack()
         self.dotradio   = Radiobutton (self.root,text="Decimal Dot",
-                                        variable=self.decimalsep_comma_or_dot,value=1).pack()
+                                        variable=self.decimalsep_comma_or_dot,value=1,bg="#f0f0f0").pack()
         
         self.db_or_z=IntVar()
         self.dbradio = Radiobutton(self.root,text="dB formatted data",
-                                    variable=self.db_or_z,value=0).pack()
+                                    variable=self.db_or_z,value=0,bg="#f0f0f0").pack()
         self.zradio = Radiobutton(self.root,text="Z formatted data",
-                                    variable=self.db_or_z,value=1).pack()
+                                    variable=self.db_or_z,value=1,bg="#f0f0f0").pack()
 
         self.component=Combobox(self.root,values=["Capacitor","Inductor","CM Choke"])
         self.component.pack()
@@ -213,8 +218,6 @@ class Application:
         
         pass
 
-    def choiceComponent(self):
-        pass
 
         ##TODO
         ##Plotting
@@ -222,7 +225,6 @@ class Application:
     def routine(self):
         
         
-
         if self.csv_or_table.get()==0:
             df=pd.read_csv(self.filename,sep=",",decimal=".")
             pass
@@ -262,10 +264,22 @@ class Application:
                     "\nResonance frequency: "+str(self.capacitor.resonance_frequency))                    
             self.solution.pack()
             pass
-
         elif comp=="Inductor":
+            self.inductor=Inductor(self.frequency,self.impedance)
+            self.solution=Label(self.root,text="Capacitance: "+str(self.inductor.Cap)+
+                    "\nInductance: "+str(self.inductor.Ind)+
+                    "\nSerial Resistance: "+str(self.inductor.resistance) +
+                    "\nResonance frequency: "+str(self.inductor.resonance_frequency))
+            self.solution.pack()
             pass
         elif comp=="CM Choke":
+            self.cmchoke=CmChoke(self.frequency,self.impedance)
+            self.solution=Label(self.root,text="Capacitance: "+str(self.cmchoke.Cap)+
+                    "\nInductance: "+str(self.cmchoke.Ind)+
+                    "\nSerial Resistance: "+str(self.cmchoke.resistance) +
+                    "\nResonance frequency: "+str(self.cmchoke.resonance_frequency))
+            self.solution.pack()
+
             pass
 
         pass
