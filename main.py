@@ -121,8 +121,6 @@ class Application:
         else:
             messagebox.showerror("Error","Choose if data is in dB or Z format")
             pass
-        
-
         #self.frequency=list(df["Frequency[Hz]"])
         #self.impedance=list(df['Impedance[ohm]'])  
 
@@ -144,7 +142,6 @@ class Application:
         pass
 
 
-    
 
 def main():
          
