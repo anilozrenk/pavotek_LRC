@@ -22,8 +22,7 @@ class ModelMaker:
     def capacitor_model(self,name,cap,ind,res,dest):    
         with open("./model_template/cap.asy") as f:
             self.cap_asy_temp = f.read()
-            self.cap_asy_temp=self.cap_asy_temp.format(nameval=name,modeldestination=dest)
-            
+            self.cap_asy_temp=self.cap_asy_temp.format(nameval=name,modeldestination=dest)            
         with open("./model_template/cap.model") as f:
             self.cap_model_temp = f.read()
             self.cap_model_temp=self.cap_model_temp.format(nameval=name,capval=cap,indval=ind,resval=res)
@@ -31,6 +30,7 @@ class ModelMaker:
             f.writelines(self.cap_model_temp)
         with open(dest+"/%s.asy"%name,"w") as f:
             f.writelines(self.cap_asy_temp)
+
     def inductor_model(self,name,cap,ind,res,dest):
         with open("./model_template/ind.asy") as f:
             self.ind_asy_temp = f.read()
@@ -42,6 +42,7 @@ class ModelMaker:
             f.writelines(self.ind_model_temp)
         with open(dest+"/%s.asy"%name,"w") as f:
             f.writelines(self.ind_asy_temp)
+
     def cmchoke_model(self,name,cap,ind,res,dest):
         with open("./model_template/cmchoke.asy") as f:
             self.cmchoke_asy_temp = f.read()
@@ -134,8 +135,6 @@ class Inductor:
         cap_slope[0]=cap_slope[1]
         index_slope = list(map(abs,cap_slope)).index(min(map(abs,cap_slope)),self.index_resonance,len(cap_slope))
         self.Cap=self.cap_table[index_slope]    
-                
-        
         self.Cap=1/(4*(math.pi**2)*(self.resonance_frequency**2)*self.Ind)
 
         pass 
