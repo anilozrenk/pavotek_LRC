@@ -11,9 +11,9 @@ LINE Normal 33 -32 10 -32
 TEXT 14 1 VTop 0 anilozrenk
 WINDOW 0 0 -33 Bottom 2
 WINDOW 3 1 33 Top 2
-SYMATTR Value {nameval}
+SYMATTR Value yeteeeer
 SYMATTR Prefix X
-SYMATTR ModelFile {modeldestination}/{nameval}.model
+SYMATTR ModelFile /home/anilozrenk/Documents/pavotek_LRC/yeteeeer.model
 PIN -32 0 NONE 8
 PINATTR PinName port1
 PINATTR SpiceOrder 1
