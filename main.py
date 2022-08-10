@@ -1,8 +1,10 @@
+from ast import Lambda
 import math
 import string
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
+from tkinter import simpledialog
 from tkinter.ttk import Combobox
 import numpy as np
 import pandas as pd
@@ -14,7 +16,7 @@ import os.path
 #TODO
 
 class ModelMaker:
-    def __init__(self,name:string,cap,ind,res,dest):
+    def __init__(self):
         self.cap_asy_temp:string
         self.cap_model_temp:string
         
@@ -24,7 +26,6 @@ class ModelMaker:
         with open("./model_template/cap.model") as f:
             self.cap_model_temp = f.readlines()
         self.cap_model_temp.format(nameVal=name,capVal=cap,indVal=ind,resVal=res)
-        
         with open(dest+"/%s.model"%name,"w") as f:
             f.writelines(self.cap_model_temp)
         with open(dest+"/%s.asy"%name,"w") as f:
@@ -234,10 +235,9 @@ class Application:
         self.filename = filedialog.askopenfilename(
                                     initialdir = "./",
                                     title = "Select file",
-                                    filetypes = (("txt files","*.txt"),("csv files","*.csv"),("all files","*.*")))
+                                    filetypes = (("all files","*.*"),("txt files","*.txt"),("csv files","*.csv")))
         self.choicetext.delete(0,END)
-        self.choicetext.insert(0,self.filename)
-        
+        self.choicetext.insert(0,self.filename)        
         pass
 
 
@@ -260,12 +260,8 @@ class Application:
             df=pd.read_table(self.filename,sep="\t",decimal=",")
             pass
 
-        
-
         self.frequency=list(df.iloc[:,0])
         self.impedance=list(df.iloc[:,1])  
-
-
 
         if self.db_or_z.get()==0:
             self.impedance=list(map(lambda x: 10**(x/20),self.impedance))
@@ -278,6 +274,7 @@ class Application:
 
         comp=self.component.get()
 
+        self.genButton= Button (self.root,text="Generate",command=self.generate)
         if comp=="Capacitor":
             self.capacitor=Capacitor(self.frequency,self.impedance)
             self.solution=Label(self.root,text="Capacitance: "+str(self.capacitor.Cap)+
@@ -285,6 +282,7 @@ class Application:
                     "\nSerial Resistance: "+str(self.capacitor.Rs) +
                     "\nResonance frequency: "+str(self.capacitor.resonance_frequency))                    
             self.solution.pack()
+            self.genButton.config(text="Generate Capacitor Model",command=self.generateCapacitor)
             pass
         elif comp=="Inductor":
             self.inductor=Inductor(self.frequency,self.impedance)
@@ -293,6 +291,7 @@ class Application:
                     "\nSerial Resistance: "+str(self.inductor.Rs) +
                     "\nResonance frequency: "+str(self.inductor.resonance_frequency))
             self.solution.pack()
+            self.genButton.config(text="Generate Inductor Model",command=self.generateInductor)
             pass
         elif comp=="CM Choke":
             self.cmchoke=CmChoke(self.frequency,self.impedance)
@@ -301,11 +300,27 @@ class Application:
                     "\nSerial Resistance: "+str(self.cmchoke.Rs) +
                     "\nResonance frequency: "+str(self.cmchoke.resonance_frequency))
             self.solution.pack()
+            self.genButton.config(text="Generate CM Choke Model",command=self.generateCmChoke)
 
             pass
 
         pass
-
+        
+        def generateCapacitor(self):
+            self.destChooser=filedialog.askdirectory(initialdir="./",title="Select destination")
+            self.name= simpledialog.askstring("Name","Enter name of generated capacitor model")
+            self.modelmaker=ModelMaker().capacitor_model(self.name,self.capacitor.Cap,self.capacitor.Ind,self.capacitor.Rs,self.destChooser)
+            pass
+        def generateInductor(self):
+            self.destChooser=filedialog.askdirectory(initialdir="./",title="Select destination")
+            self.name= simpledialog.askstring("Name","Enter name of generated inductor model")
+            self.modelmaker=ModelMaker().inductor_model(self.name,self.inductor.Cap,self.inductor.Ind,self.inductor.Rs,self.destChooser)
+            pass
+        def generateCmChoke(self):
+            self.destChooser=filedialog.askdirectory(initialdir="./",title="Select destination")
+            self.name= simpledialog.askstring("Name","Enter name of generated cm choke model")
+            self.modelmaker=ModelMaker().cmchoke_model(self.name,self.cmchoke.Cap,self.cmchoke.Ind,self.cmchoke.Rs,self.destChooser)
+            pass
 
 
 def main():
