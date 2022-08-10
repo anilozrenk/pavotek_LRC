@@ -1,15 +1,34 @@
 import math
+import string
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter.ttk import Combobox
 import numpy as np
 import pandas as pd
+import os.path
+
+
+
 
 #TODO
-# Decite use frequuency response for find capasitance or inductance
-# Correct Cm Choke
 
+class ModelMaker:
+    def __init__(self,name:string,cap,ind,res,dest):
+        self.cap_asy_temp:string
+        self.cap_model_temp:string
+        
+    def capacitor_model(self,name:string,cap,ind,res,dest):    
+        with open("./model_template/cap.asy") as f:
+            self.cap_asy_temp = f.readlines()
+        with open("./model_template/cap.model") as f:
+            self.cap_model_temp = f.readlines()
+        self.cap_model_temp.format(nameVal=name,capVal=cap,indVal=ind,resVal=res)
+        
+        with open(dest+"/%s.model"%name,"w") as f:
+            f.writelines(self.cap_model_temp)
+        with open(dest+"/%s.asy"%name,"w") as f:
+            f.writelines(self.cap_asy_temp)
 
 class Capacitor:
 
@@ -59,7 +78,7 @@ class Capacitor:
         pass 
 
     def resistance(self):
-        self.resistance=min(self.impedance)
+        self.Rs=min(self.impedance)
         pass
 class Inductor:
 
@@ -110,7 +129,7 @@ class Inductor:
         pass 
 
     def resistance(self):
-        self.resistance=max(self.impedance)
+        self.Rs=max(self.impedance)
         pass
     
 class CmChoke:
@@ -129,6 +148,8 @@ class CmChoke:
         self.inductance()
         self.capasitance()
         self.resistance()
+        self.Rs=self.Rs*2
+        self.Cap=self.Cap/2
 
         
     def f_resonance(self):
@@ -160,10 +181,10 @@ class CmChoke:
         pass 
 
     def resistance(self):
-        self.resistance=max(self.impedance)
+        self.Rs=max(self.impedance)
         pass
-        self.resistance=self.resistance*2
-        self.Cap=self.Cap/2
+        
+        
 class Application:
     
     def __init__(self,root):
@@ -261,7 +282,7 @@ class Application:
             self.capacitor=Capacitor(self.frequency,self.impedance)
             self.solution=Label(self.root,text="Capacitance: "+str(self.capacitor.Cap)+
                     "\nInductance: "+str(self.capacitor.Ind)+
-                    "\nSerial Resistance: "+str(self.capacitor.resistance) +
+                    "\nSerial Resistance: "+str(self.capacitor.Rs) +
                     "\nResonance frequency: "+str(self.capacitor.resonance_frequency))                    
             self.solution.pack()
             pass
@@ -269,7 +290,7 @@ class Application:
             self.inductor=Inductor(self.frequency,self.impedance)
             self.solution=Label(self.root,text="Capacitance: "+str(self.inductor.Cap)+
                     "\nInductance: "+str(self.inductor.Ind)+
-                    "\nSerial Resistance: "+str(self.inductor.resistance) +
+                    "\nSerial Resistance: "+str(self.inductor.Rs) +
                     "\nResonance frequency: "+str(self.inductor.resonance_frequency))
             self.solution.pack()
             pass
@@ -277,7 +298,7 @@ class Application:
             self.cmchoke=CmChoke(self.frequency,self.impedance)
             self.solution=Label(self.root,text="Capacitance: "+str(self.cmchoke.Cap)+
                     "\nInductance: "+str(self.cmchoke.Ind)+
-                    "\nSerial Resistance: "+str(self.cmchoke.resistance) +
+                    "\nSerial Resistance: "+str(self.cmchoke.Rs) +
                     "\nResonance frequency: "+str(self.cmchoke.resonance_frequency))
             self.solution.pack()
 

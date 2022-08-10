@@ -1,0 +1,5 @@
+.subckt {nameVal} port1 port2
+C port1 a {capVal}
+R a b {resVal}
+L b port2 {indVal}
+
