@@ -1,4 +1,3 @@
-from ast import Lambda
 import math
 import string
 from tkinter import *
@@ -20,17 +19,40 @@ class ModelMaker:
         self.cap_asy_temp:string
         self.cap_model_temp:string
         
-    def capacitor_model(self,name:string,cap,ind,res,dest):    
+    def capacitor_model(self,name,cap,ind,res,dest):    
         with open("./model_template/cap.asy") as f:
-            self.cap_asy_temp = f.readlines()
+            self.cap_asy_temp = f.read()
+            self.cap_asy_temp=self.cap_asy_temp.format(nameval=name,modeldestination=dest)
+            
         with open("./model_template/cap.model") as f:
-            self.cap_model_temp = f.readlines()
-        self.cap_model_temp.format(nameVal=name,capVal=cap,indVal=ind,resVal=res)
+            self.cap_model_temp = f.read()
+            self.cap_model_temp=self.cap_model_temp.format(nameval=name,capval=cap,indval=ind,resval=res)
         with open(dest+"/%s.model"%name,"w") as f:
             f.writelines(self.cap_model_temp)
         with open(dest+"/%s.asy"%name,"w") as f:
             f.writelines(self.cap_asy_temp)
-
+    def inductor_model(self,name,cap,ind,res,dest):
+        with open("./model_template/ind.asy") as f:
+            self.ind_asy_temp = f.read()
+            self.ind_asy_temp=self.ind_asy_temp.format(nameval=name,modeldestination=dest)         
+        with open("./model_template/ind.model") as f:
+            self.ind_model_temp = f.read()
+            self.ind_model_temp=self.ind_model_temp.format(nameval=name,capval=cap,indval=ind,resval=res)
+        with open(dest+"/%s.model"%name,"w") as f:
+            f.writelines(self.ind_model_temp)
+        with open(dest+"/%s.asy"%name,"w") as f:
+            f.writelines(self.ind_asy_temp)
+    def cmchoke_model(self,name,cap,ind,res,dest):
+        with open("./model_template/cmchoke.asy") as f:
+            self.cmchoke_asy_temp = f.read()
+            self.cmchoke_asy_temp=self.cmchoke_asy_temp.format(nameval=name,modeldestination=dest)
+        with open("./model_template/cmchoke.model") as f:
+            self.cmchoke_model_temp = f.read()
+            self.cmchoke_model_temp=self.cmchoke_model_temp.format(nameval=name,capval=cap,indval=ind,resval=res)
+        with open(dest+"/%s.model"%name,"w") as f:
+            f.writelines(self.cmchoke_model_temp)
+        with open(dest+"/%s.asy"%name,"w") as f:
+            f.writelines(self.cmchoke_asy_temp)
 class Capacitor:
 
     def __init__(self,frequency,impedance):
@@ -274,7 +296,7 @@ class Application:
 
         comp=self.component.get()
 
-        self.genButton= Button (self.root,text="Generate",command=self.generate)
+        
         if comp=="Capacitor":
             self.capacitor=Capacitor(self.frequency,self.impedance)
             self.solution=Label(self.root,text="Capacitance: "+str(self.capacitor.Cap)+
@@ -282,7 +304,8 @@ class Application:
                     "\nSerial Resistance: "+str(self.capacitor.Rs) +
                     "\nResonance frequency: "+str(self.capacitor.resonance_frequency))                    
             self.solution.pack()
-            self.genButton.config(text="Generate Capacitor Model",command=self.generateCapacitor)
+            self.genButton= Button(text="Generate Capacitor Model",command=self.generateCapacitor).pack()
+            
             pass
         elif comp=="Inductor":
             self.inductor=Inductor(self.frequency,self.impedance)
@@ -291,7 +314,8 @@ class Application:
                     "\nSerial Resistance: "+str(self.inductor.Rs) +
                     "\nResonance frequency: "+str(self.inductor.resonance_frequency))
             self.solution.pack()
-            self.genButton.config(text="Generate Inductor Model",command=self.generateInductor)
+            self.genButton= Button(text="Generate Inductor Model",command=self.generateInductor).pack()
+            #self.genButton.config(text="Generate Inductor Model",command=self.generateInductor)
             pass
         elif comp=="CM Choke":
             self.cmchoke=CmChoke(self.frequency,self.impedance)
@@ -300,23 +324,24 @@ class Application:
                     "\nSerial Resistance: "+str(self.cmchoke.Rs) +
                     "\nResonance frequency: "+str(self.cmchoke.resonance_frequency))
             self.solution.pack()
-            self.genButton.config(text="Generate CM Choke Model",command=self.generateCmChoke)
+            self.genButton= Button(text="Generate CM Choke Model",command=self.generateCmChoke).pack()
+            #self.genButton.config(text="Generate CM Choke Model",command=self.generateCmChoke)
 
             pass
 
         pass
         
-        def generateCapacitor(self):
+    def generateCapacitor(self):
             self.destChooser=filedialog.askdirectory(initialdir="./",title="Select destination")
             self.name= simpledialog.askstring("Name","Enter name of generated capacitor model")
             self.modelmaker=ModelMaker().capacitor_model(self.name,self.capacitor.Cap,self.capacitor.Ind,self.capacitor.Rs,self.destChooser)
             pass
-        def generateInductor(self):
+    def generateInductor(self):
             self.destChooser=filedialog.askdirectory(initialdir="./",title="Select destination")
             self.name= simpledialog.askstring("Name","Enter name of generated inductor model")
             self.modelmaker=ModelMaker().inductor_model(self.name,self.inductor.Cap,self.inductor.Ind,self.inductor.Rs,self.destChooser)
             pass
-        def generateCmChoke(self):
+    def generateCmChoke(self):
             self.destChooser=filedialog.askdirectory(initialdir="./",title="Select destination")
             self.name= simpledialog.askstring("Name","Enter name of generated cm choke model")
             self.modelmaker=ModelMaker().cmchoke_model(self.name,self.cmchoke.Cap,self.cmchoke.Ind,self.cmchoke.Rs,self.destChooser)
