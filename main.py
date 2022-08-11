@@ -1,4 +1,5 @@
 import math
+from sqlite3 import Row
 import string
 from tkinter import *
 from tkinter import filedialog
@@ -252,6 +253,10 @@ class Application:
         self.runbutton = Button (self.root,text="Run",command=self.routine)
         self.runbutton.pack()
         self.solution=Label(self.root,text="",bg="#f0f0f0",pady=10)
+
+        self.watermark = Label(self.root,text="https://github.com/anilozrenk",bg="#f0f0f0",fg="#000000")
+        self.watermark.place(relx=0.5,rely=1,anchor=S)
+
     def choiceFreqResponseData(self):
         self.filename = filedialog.askopenfilename(
                                     initialdir = "./",
