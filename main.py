@@ -220,6 +220,7 @@ class Application:
 
         Label(self.root,text="Pavotek LCR",font=("Helvetica",20),bg="#f0f0f0",fg="#000000",pady=50).pack()
         
+        Button(self.root,text="Calculate",bg="#f0f0f0",fg="#000000",command=self.help).pack()
         Label(self.root,text="Enter the file destination",bg="#f0f0f0",pady=10).pack()
         self.choicetext = Entry (self.root,width=30)
         self.choicetext.insert(0,"./data/data.csv")
@@ -256,7 +257,11 @@ class Application:
 
         self.watermark = Label(self.root,text="https://github.com/anilozrenk",bg="#f0f0f0",fg="#000000")
         self.watermark.place(relx=0.5,rely=1,anchor=S)
-
+    def help(self):
+        new=Toplevel();
+        new.title("Help")
+        new.help_text=Label(new,text="lolololololololo",bg="#f0f0f0",fg="#000000").pack()
+        
     def choiceFreqResponseData(self):
         self.filename = filedialog.askopenfilename(
                                     initialdir = "./",
