@@ -337,17 +337,17 @@ class Application:
         
     def generateCapacitor(self):
             self.destChooser=filedialog.askdirectory(initialdir="./",title="Select destination")
-            self.name= simpledialog.askstring("Name","Enter name of generated capacitor model")
+            self.name= simpledialog.askstring("Capacitor","Enter name of generated capacitor model")
             self.modelmaker=ModelMaker().capacitor_model(self.name,self.capacitor.Cap,self.capacitor.Ind,self.capacitor.Rs,self.destChooser)
             pass
     def generateInductor(self):
             self.destChooser=filedialog.askdirectory(initialdir="./",title="Select destination")
-            self.name= simpledialog.askstring("Name","Enter name of generated inductor model")
+            self.name= simpledialog.askstring("Inductor","Enter name of generated inductor model")
             self.modelmaker=ModelMaker().inductor_model(self.name,self.inductor.Cap,self.inductor.Ind,self.inductor.Rs,self.destChooser)
             pass
     def generateCmChoke(self):
             self.destChooser=filedialog.askdirectory(initialdir="./",title="Select destination")
-            self.name= simpledialog.askstring("Name","Enter name of generated cm choke model")
+            self.name= simpledialog.askstring("CmChoke","Enter name of generated cm choke model")
             self.modelmaker=ModelMaker().cmchoke_model(self.name,self.cmchoke.Cap,self.cmchoke.Ind,self.cmchoke.Rs,self.destChooser)
             pass
 
