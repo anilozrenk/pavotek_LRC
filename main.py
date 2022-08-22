@@ -1,5 +1,4 @@
 import math
-from sqlite3 import Row
 import string
 from tkinter import *
 from tkinter import filedialog
@@ -8,7 +7,7 @@ from tkinter import simpledialog
 from tkinter.ttk import Combobox
 import numpy as np
 import pandas as pd
-import os.path
+
 
 
 
@@ -220,7 +219,7 @@ class Application:
 
         Label(self.root,text="Pavotek LCR",font=("Helvetica",20),bg="#f0f0f0",fg="#000000",pady=50).pack()
         
-        Button(self.root,text="Calculate",bg="#f0f0f0",fg="#000000",command=self.help).pack()
+    
         Label(self.root,text="Enter the file destination",bg="#f0f0f0",pady=10).pack()
         self.choicetext = Entry (self.root,width=30)
         self.choicetext.insert(0,"./data/data.csv")
