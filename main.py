@@ -1,5 +1,6 @@
 import math
 import string
+import sys
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
@@ -215,8 +216,9 @@ class Application:
         self.root.geometry("500x800")
         #self.root.resizable(False,False)
         self.root.configure(background='#f0f0f0')
-        #self.root.iconbitmap('icon.ico')
-
+        if sys.platform()=="win32":
+            self.root.iconbitmap('icon.ico')
+        
         Label(self.root,text="Pavotek LCR",font=("Helvetica",20),bg="#f0f0f0",fg="#000000",pady=50).pack()
         
     
